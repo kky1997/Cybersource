@@ -3,7 +3,9 @@ This application was created as part of the Attack Flow project, which aims to b
 
 # Contributors
 Kai Koo
+
 Edward Sellars
+
 Blake Hammond
 
 # Setup Details
