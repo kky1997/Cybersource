@@ -1,0 +1,488 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+    font-family: 'Space Grotesk', sans-serif;
+    color: black;
+}
+
+body {
+    margin: auto;
+}
+
+/* Header Styling */
+
+header {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(34, 139, 230, 0.816);
+}
+
+header img {
+    height: 50px;
+    display: inline-block;
+    margin: 10px 0px 0px 10px;
+}
+
+h1 {
+    display: inline-block;
+    margin-left: 10px;
+    position: absolute;
+    top: 20px;
+}
+
+header nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 30px;
+    margin-right: 40px;
+    margin-left: 40px;
+}
+
+header nav button {
+    padding: 10px;
+    font-size: medium;
+    border: 2px solid white;
+    border-bottom: 2px solid #228BE6;
+    background-color: white;
+}
+
+header nav button:hover, header nav button:focus {
+    border: 2px solid #228BE6;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.active {
+    border: 2px solid #228BE6;
+    border-radius: 8px;
+    background-color: rgba(34, 139, 230) !important;
+    color: white;
+    cursor: default !important;
+    border-bottom: 2px solid rgba(34, 139, 230, 0.1);
+}
+
+.active span {
+    color: white;
+}
+
+/* Main Content */
+
+main {
+    width: 95%;
+    max-width: 1200px;
+    margin: auto;
+    margin-bottom: 100px;
+}
+
+#loginPage {
+    border: 2px solid rgba(34, 139, 230);
+    box-shadow: 0px 0px 8px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    top: 200px;
+    max-width: 400px;
+    box-shadow: rgba(34, 139, 230, 0.4) 5px 5px;
+}
+
+#enterIncident, #enterIncidentAnnotation {
+    border: 2px solid rgba(34, 139, 230);
+    box-shadow: 0px 0px 8px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: rgba(34, 139, 230, 0.4) 5px 5px;
+    position: relative;
+    max-width: 600px;
+}
+
+#enterIncidentAttackflow, #viewIncidentAttackflow, #viewIncident {
+    border: 2px solid rgba(34, 139, 230);
+    box-shadow: 0px 0px 8px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: rgba(34, 139, 230, 0.4) 5px 5px;
+    position: relative;
+}
+
+#enterIncidentAttackflow div canvas, #viewIncident div canvas {
+    margin-top: 30px;
+    border: 1px solid #228BE6;
+}
+
+#attackActions {
+    margin-top: 30px;
+}
+
+#loginPage input[type=email], #loginPage input[type=password], #enterIncident input[type=text], #enterIncident input[type=date], #viewIncident input[type=text], #viewIncident input[type=date], #enterIncidentAnnotation input[type=text], #enterIncidentAnnotation input[type=date], #enterIncidentAttackflow input[type=text], #enterIncidentAttackflow input[type=date], #viewIncidentAttackflow input[type=text], #viewIncidentAttackflow input[type=date] {
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 1px solid black;
+    padding: 5px;
+}
+
+#loginPage input[type=submit], #enterIncident input[type=submit], #viewIncident input[type=submit], #editButton, #enterIncidentAnnotation input[type=submit], #enterIncidentAttackflow input[type=submit], #viewIncidentAttackflow input[type=submit] {
+    margin: auto;
+    margin-top: 10px;
+    padding: 10px;
+    font-size: medium;
+    border: 2px solid white;
+    border-bottom: 2px solid #228BE6;
+    background-color: white;
+}
+
+#loginPage input[type=submit]:hover, #enterIncident input[type=submit]:hover, #viewIncident input[type=submit]:hover, #editButton:hover, #enterIncidentAnnotation input[type=submit]:hover, #enterIncidentAttackflow input[type=submit]:hover, #viewIncidentAttackflow input[type=submit]:hover {
+    border: 2px solid #228BE6;
+    cursor: pointer;
+    background-color: #228BE6;
+    border-radius: 8px;
+    color: white;
+}
+
+input[type=date]:hover:enabled {
+    cursor: pointer;
+}
+
+.incidentAttachmentUpload, .attackflowFileUpload {
+    border: 2px dashed #228BE6;
+    height: 100px;
+    width: 300px;
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 20px;
+}
+
+.incidentAttachmentUpload:hover, .attackflowFileUpload:hover {
+    cursor: pointer;
+}
+
+.incidentAttachmentUpload span, .attackflowFileUpload span {
+    position: relative;
+    top: 35px;
+}
+
+table {
+    width: 100%;
+    border: 2px solid #228BE6;
+    border-radius: 8px;
+    background-color: #228BE6;
+    padding: 2px;
+}
+
+tbody > tr > :nth-child(1) {
+    width: 150px;
+}
+
+tbody > tr > :nth-child(2) {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+th {
+    background-color: #228BE6;
+    color: white;
+    font-weight: normal;
+}
+
+td {
+    background-color: white;
+    border-radius: 2px;
+    padding: 5px;
+}
+
+.tableRowHover:hover {
+    cursor: pointer;
+    outline: 2px solid red;
+}
+
+#searchBar {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#searchBar input {
+    border: none;
+    padding: 10px;
+    border-bottom: 2px solid #228BE6;
+}
+
+#currentVersion, #currentVersionStatic {
+    margin-left: 10px;
+    border: none;
+    font-size: medium;
+}
+
+#currentVersion:hover:enabled, #currentVersionStatic:hover:enabled {
+    cursor: pointer;
+}
+
+.fieldContainer {
+    border-bottom: 1px solid #228BE6;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+#viewIncident img, #enterIncident img, #enterIncidentAnnotation img, #enterIncidentAttackflow img, #viewIncidentAttackflow img {
+    height: 20px;
+    position: absolute;
+    right: 20px;
+}
+
+#viewIncident img:hover, #enterIncident img:hover, #enterIncidentAnnotation img:hover, #enterIncidentAttackflow img:hover, #viewIncidentAttackflow img:hover {
+    cursor: pointer;
+    filter: invert(47%) sepia(32%) saturate(3583%) hue-rotate(186deg) brightness(94%) contrast(92%);
+}
+
+/*modal stuff*/
+.modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* Semi-transparent background */
+    overflow: auto;
+    z-index: 1000; /* Ensure modal is above other elements */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #228BE6;
+    border-radius: 8px;
+    width: 50%; /* Adjust as needed */
+    max-width: 400px;
+    box-shadow: rgba(34, 139, 230, 0.4) 5px 5px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #228BE6;
+    text-decoration: none;
+}
+
+/* Style the input fields, labels, and buttons inside the modal */
+.modal-content label,
+.modal-content input,
+.modal-content button {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.modal-content input[type=email],
+.modal-content input[type=password] {
+    border: none;
+    border-bottom: 1px solid black;
+    padding: 5px;
+    width: 100%;
+}
+
+.modal-content button {
+    padding: 10px;
+    font-size: medium;
+    border: 2px solid white;
+    border-bottom: 2px solid #228BE6;
+    background-color: white;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    border: 2px solid #228BE6;
+    background-color: #228BE6;
+    border-radius: 8px;
+    color: white;
+}
+
+.signupPrompt {
+    margin-top: 30px;
+}
+
+.link {
+    border: none;
+    border-bottom: 2px solid #228BE6;
+    background-color: white;
+}
+
+.link:hover {
+    cursor: pointer;
+    border: 2px solid #228BE6;
+    border-radius: 8px;
+    background-color: rgba(34, 139, 230) !important;
+    color: white;
+    border-bottom: 2px solid rgba(34, 139, 230, 0.1);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.lds-roller {
+    display: block;
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    top: 40%;
+    left: calc(50% - 40px);
+}
+
+.lds-roller div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
+}
+
+.lds-roller div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #228BE6;
+    margin: -4px 0 0 -4px;
+}
+
+.lds-roller div:nth-child(1) {
+    animation-delay: -0.036s;
+}
+
+.lds-roller div:nth-child(1):after {
+    top: 63px;
+    left: 63px;
+}
+
+.lds-roller div:nth-child(2) {
+    animation-delay: -0.072s;
+}
+
+.lds-roller div:nth-child(2):after {
+    top: 68px;
+    left: 56px;
+}
+
+.lds-roller div:nth-child(3) {
+    animation-delay: -0.108s;
+}
+
+.lds-roller div:nth-child(3):after {
+    top: 71px;
+    left: 48px;
+}
+
+.lds-roller div:nth-child(4) {
+    animation-delay: -0.144s;
+}
+
+.lds-roller div:nth-child(4):after {
+    top: 72px;
+    left: 40px;
+}
+
+.lds-roller div:nth-child(5) {
+    animation-delay: -0.18s;
+}
+
+.lds-roller div:nth-child(5):after {
+    top: 71px;
+    left: 32px;
+}
+
+.lds-roller div:nth-child(6) {
+    animation-delay: -0.216s;
+}
+
+.lds-roller div:nth-child(6):after {
+    top: 68px;
+    left: 24px;
+}
+
+.lds-roller div:nth-child(7) {
+    animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+    top: 63px;
+    left: 17px;
+}
+
+.lds-roller div:nth-child(8) {
+    animation-delay: -0.288s;
+}
+
+.lds-roller div:nth-child(8):after {
+    top: 56px;
+    left: 12px;
+}
+
+@keyframes lds-roller {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#attackActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.attackAction {
+    border: 1px solid #228BE6;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.adminButton {
+    border: 2px solid #228BE6;
+    border-radius: 5px;
+    /*border-bottom: 2px solid #228BE6;*/
+    background-color: white;
+    padding: 2.5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#tdAdmin {
+    background-color: white;
+    border-radius: 2px;
+    padding: 1px;
+}
+
+.container{ /*flex container for admin approve and reject buttons*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

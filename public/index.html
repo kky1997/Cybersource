@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./stylesheets/style.css" />
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="./javascripts/index.js" defer></script>
+        <link rel="icon" href="./images/logo.png" />
+        <title>CyberSource</title>
+        <script src="umd/collections.js" type="text/javascript"></script>
+        <script src="umd/drawing.js" type="text/javascript"></script>
+        <script src="umd/controls.js" type="text/javascript"></script>
+        <script src="umd/animations.js" type="text/javascript"></script>
+        <script src="umd/graphs.js" type="text/javascript"></script>
+        <script src="umd/diagramming.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="app">
+            <header>
+                <img src="./images/logo.png" alt="CyberSource Logo">
+                <h1>CyberSource</h1>
+                <nav v-if="currentPage != 0">
+                    <button ref="databaseButton" id="databaseButton" type="button" v-on:click="currentPage = 1; updateCurrentPageButtons()" class="active">All Incidents</button>
+                    <button id="createIncidentButton" type="button" v-on:click="currentPage = 2; updateCurrentPageButtons()">Enter an Incident</button>
+                    <button id="viewIncidentButton" type="button" v-on:click="currentPage = 3; updateCurrentPageButtons()">Your Incidents <span>&#40; {{ numberOfIncidentsPendingApproval }} &#41;</span></button>
+                    <button type="button" @click="logout" v-on:click="currentPage = 0">Logout</button>
+                </nav>
+            </header>
+            <main v-bind:hidden="loading">
+                <!-- Login Form -->
+                <!--using vue method login for form submit behaviour and have email and password bound to "email" & "password" variables in vue instance-->
+                <form v-if="currentPage == 0" id="loginPage" method="POST" @submit.prevent="login">
+                    <label for="email">Email</label>
+                    <input required type="email" id="email" name="email" title="Enter your email" v-model="email"/>
+                    <label for="password" >Password</label>
+                    <input required type="password" id="password" name="password" title="Enter your password" v-model="password"/>
+                    <input type="submit">
+                    <div class="signupPrompt">
+                        Don't have an account? <button type="button" @click="openSignupModal" class="link">Click here</button>
+                    </div>
+                </form>
+                <!--sign up modal-->
+                <div v-if="showSignupModal" class="modal">
+                    <div class="modal-content">
+                        <span @click="closeSignupModal" class="close">&times;</span>
+                        <form id="signupForm" @submit.prevent="signup">
+                            <!-- Your signup form fields here -->
+                            <label for="signupEmail">Email</label>
+                            <input type="email" id="signupEmail" v-model="signupEmail" required>
+                            <label for="signupPass">Password</label>
+                            <input type="password" id="signupPass" v-model="signupPass" required>
+                            <label for="signupEmail">First Name</label>
+                            <input type="text" id="firstName" v-model="firstName" required>
+                            <label for="signupPass">Last Name</label>
+                            <input type="text" id="lastName" v-model="lastName" required>
+                            <button type="submit">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- View All Incidents OR View Incidents Pending Approval -->
+                <h2 v-if="currentPage == 3">The following Incidents have been submitted for approval</h2>
+                <div v-if="currentPage == 1 || currentPage == 3" id="searchBar">
+                    <input type="text" id="search" name="search" title="Enter a search term or phrase" placeholder="Type to search..." v-model="searchTerm" v-on:input="getIncidents"/>
+                </div>
+                <table v-if="currentPage == 1 || currentPage == 3" id="databaseTable">
+                    <tr>
+                        <th>Date Reported</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr v-if="incidents.length == 0" style="text-align: center;">
+                        <td colspan="2">No incidents found...</td>
+                    </tr>
+                    <tr v-else v-bind:id="incident.id" v-for="incident in incidents" class="tableRowHover" title="Click to open incident" v-on:click="lastPage = currentPage; currentPage = 4; getIncident(incident.id, incident.version); incidentId = incident.id; version = incident.version;">
+                        <td>{{ incident.dateReported }}</td>
+                        <td><p v-bind:style="{color: incident.error}">{{ incident.briefDescription }}</p></td>
+                        <td v-if="currentPage == 3 && role == 'Approve'" id="tdAdmin">
+                            <div class = "container">
+                                <button type = "button" @click.stop="approveIncident(incident.id)" class="adminButton">Approve</button>
+                                <button type = "button" @click.stop="rejectIncident(incident.id)" class="adminButton">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <!-- Enter Incident -->
+                <form v-if="currentPage == 2" id="enterIncident" method="POST" @submit.prevent="submitIncident(incidentId, version, true)">
+                    <img src="./images/cross.svg" alt="Close" v-on:click="currentPage = 1; updateCurrentPageButtons();">
+                    <label for="dateReported" style="margin-top: 30px;">Date Reported</label>
+                    <input required type="date" id="dateReported" name="dateReported" title="Enter the date you are reporting this incident" onfocus="this.showPicker()" v-model="dateReported"/>
+                    <label for="briefDescription">Brief Description</label>
+                    <input required type="text" id="briefDescription" name="briefDescription" title="Enter a brief description of the incident" v-model="briefDescription"/>
+                    <label for="incidentAttachment" id="incidentAttachmentUpload" class="incidentAttachmentUpload"><span>Click to upload</span></label>
+                    <input hidden type="file" id="incidentAttachment" name="incidentAttachment" ref="fileInput" accept=".pdf, .docx, .doc" v-on:change="getAttachmentName">
+                    <p>{{ attachmentName }}</p>
+                    <p><span v-if="attachmentUploadWarning" style="color: red">The upload field is mandatory!</span> </p>
+                    <input type="submit" value="Next">
+                </form>
+                <!-- File Annotation Portion -->
+                <div v-if="currentPage == 2.1" style="display: flex">
+                    <div v-if="currentPage == 2.1" style="flex: 1; margin: 10px;">
+                        <iframe :src="attachmentPath" style="width: 100%; height: 100%;"></iframe>
+                    </div>
+                    <form v-if="currentPage == 2.1" id="enterIncidentAnnotation" method="POST" @submit.prevent="submitAnnotation(false, true)" style="flex: 1; margin: 10px;">
+                        <img src="./images/cross.svg" alt="Close" v-on:click="currentPage = 1; updateCurrentPageButtons();">
+                        <label for="dateAttack" style="margin-top: 30px;">Date of Attack</label>
+                        <input required type="date" id="dateAttack" name="dateAttack" title="Enter the date of the attack" onfocus="this.showPicker()" v-model="dateAttack"/>
+                        <label for="summary">Summary</label>
+                        <textarea name="summary" id="summary" rows="10" v-model="summary" required></textarea>
+                        <label for="targets">Target(s)</label>
+                        <textarea name="targets" id="targets" rows="10" v-model="targets" required></textarea>
+                        <label for="attackers">Attacker(s)</label>
+                        <textarea name="attackers" id="attackers" rows="10" v-model="attackers" required></textarea>
+                        <label for="authors">Author(s)</label>
+                        <textarea name="authors" id="authors" rows="10" v-model="authors" required></textarea>
+                        <input type="submit" value="Next">
+                    </form>
+                </div>
+                <!-- Attackflow Builder Portion -->
+                <form v-if="currentPage == 2.2" id="enterIncidentAttackflow" method="POST" @submit.prevent="submitIncidentAttackflow(false)">
+                    <img src="./images/cross.svg" alt="Close" v-on:click="currentPage = 1; updateCurrentPageButtons();">
+                    <div style="overflow: auto; margin-top: 30px; width: 100%; height: 900px;">
+                        <canvas id="diagram" style="margin: auto;">
+                            This page requires a browser that supports HTML 5 Canvas element.
+                        </canvas>
+                    </div>
+                    <input type="submit">
+                </form>
+                <!-- Viewing a Specific Incident -->
+                <form v-if="currentPage == 4" id="viewIncident" method="POST" @submit.prevent="submitIncident(incidentId, version, false);">
+                    <img src="./images/cross.svg" alt="Close" v-on:click="currentPage = lastPage; lastPage = 0; updateCurrentPageButtons();">
+                    <div class="fieldContainer" v-if="!editMode">
+                        <label for="currentVersion">Displaying version</label>
+                        <select name="currentVersion" id="currentVersion" v-model="version" v-on:change="getIncident(incidentId, version);" v-bind:disabled="maxVersion[0] == 1">
+                            <option  v-for="version in maxVersion" v-bind:value="version">{{ version }}</option>
+                        </select>
+                    </div>
+                    <button v-if="!editMode" type="button" id="editButton" v-on:click="editMode = true">Edit Current Version</button>
+                    <div v-else class="fieldContainer">
+                        <label for="currentVersionStatic">Editing version</label>
+                        <select name="currentVersionStatic" id="currentVersionStatic" disabled>
+                            <option v-bind:value="version">{{ version }}</option>
+                        </select>
+                    </div>
+                    <label for="dateReportedNew" >Date Reported</label>
+                    <input required type="date" id="dateReportedNew" name="dateReportedNew" title="Enter the date you are reporting this incident" onfocus="this.showPicker()" v-model="dateReported" v-bind:disabled="!editMode"/>
+                    <label for="briefDescriptionNew">Brief Description</label>
+                    <input required type="text" id="briefDescriptionNew" name="briefDescriptionNew" title="Enter a brief description of the incident" v-model="briefDescription" v-bind:disabled="!editMode"/>
+                    <p>{{ attachmentName }}</p>
+                    <p><span v-if="attachmentUploadWarning" style="color: red">The upload field is mandatory!</span> </p>
+                    <label for="dateAttackNew" style="margin-top: 30px;">Date of Attack</label>
+                    <input required type="date" id="dateAttackNew" name="dateAttackNew" title="Enter the date of the attack" onfocus="this.showPicker()" v-model="dateAttack" v-bind:disabled="!editMode"/>
+                    <label for="summaryNew">Summary</label>
+                    <textarea name="summaryNew" id="summaryNew" rows="10" v-model="summary" required v-bind:disabled="!editMode"></textarea>
+                    <label for="targetsNew">Target(s)</label>
+                    <textarea name="targetsNew" id="targetsNew" rows="10" v-model="targets" required v-bind:disabled="!editMode"></textarea>
+                    <label for="attackers">Attacker(s)</label>
+                    <textarea name="attackers" id="attackersNew" rows="10" v-model="attackers" required v-bind:disabled="!editMode"></textarea>
+                    <label for="authors">Author(s)</label>
+                    <textarea name="authors" id="authorsNew" rows="10" v-model="authors" required v-bind:disabled="!editMode"></textarea>
+                    <div style="width: 100%;  overflow: auto; margin-top: 30px;">
+                        <canvas id="diagram" style="margin: auto; height: 900px;">
+                            This page requires a browser that supports HTML 5 Canvas element.
+                        </canvas>
+                    </div>
+                    <input v-if="editMode" type="submit" value="Submit">
+                </form>
+            </main>
+            <div class="lds-roller" v-if="loading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <h3 style="left: calc(50% - 72.9375px);; position: fixed; top: 50%;" v-if="loading">Generating data</h3>
+        </div>
+    </body>
+</html>
