@@ -24,7 +24,7 @@ To launch the app (without docker), run the following commands:
 2. npm start (Starts the application on local host)
 
 # Tech Stack
-This webapp uses HTML, CSS and Vue.js for the frontend. For the backend it uses Node.js with express handling the routing. The database management system is MySQL.
+This webapp uses HTML, CSS and Vue.js for the frontend. For the backend it uses Node.js with Express.js handling the routing. The database management system is MySQL.
 
 This is a single page application.
 
