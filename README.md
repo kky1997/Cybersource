@@ -1,19 +1,17 @@
-# AttackFlow14PG
+# Introduction
+This application was created as part of the Attack Flow project, which aims to bridge the gap between cyber security professionals and attackers by creating a convenient and robust tool for reporting attacks, generating data and diagrams, and storing these reports, data, and diagrams. This application uses some elements from the MITRE Attack Flow project.
 
-# Group Members
-Kai Koo (a1739831)
-Edward Sellars (a1691120)
-Blake Hammond (a1881913)
-Jinxing Cao (a1893913)
-Hanbo Pu (a1807267)
-Siyu Ni (a1872641)
+# Contributors
+Kai Koo
+Edward Sellars
+Blake Hammond
 
 # Setup Details
 This webapp runs using Node.js. Ensure you have Node.js installed.
 
-We are also using a Docker container. Docker is not required by highly advised
+We are also using a Docker dev container to handle all dependencies. Docker is not required by highly advised
 
-To launch the app run the following commands:
+To launch the app (without docker), run the following commands:
 
 1. npm install (Installs the required node packages)
 
